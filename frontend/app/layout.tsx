@@ -1,6 +1,9 @@
+import './globals.css'
+import { AuthProvider } from '@/lib/auth'
+
 export const metadata = {
-  title: 'CDV Webapp',
-  description: 'CDV Webapp Frontend',
+  title: 'Bank CDV - System zarządzania',
+  description: 'System zarządzania klientami banku CDV',
 }
 
 export default function RootLayout({
@@ -10,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   )
 }

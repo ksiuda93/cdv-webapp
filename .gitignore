@@ -36,6 +36,16 @@ npm-debug.log*
 htmlcov/
 .pytest_cache/
 
+# Playwright
+qa/test-results/
+qa/playwright-report/
+qa/node_modules/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
 # Misc
 *.bak
 *.tmp
