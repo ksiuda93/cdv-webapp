@@ -24,8 +24,8 @@ def jwt_required_custom():
                 verify_jwt_in_request()
                 user_id = get_jwt_identity()
 
-                # Load user from database
-                current_user = UserService.get_by_id(user_id)
+                # Load user from database (identity is stored as string)
+                current_user = UserService.get_by_id(int(user_id))
                 if not current_user:
                     return jsonify({"error": "User not found"}), 401
 

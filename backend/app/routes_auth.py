@@ -50,8 +50,8 @@ def register():
     if error:
         return jsonify({"error": error}), 400
 
-    # Generate JWT token
-    access_token = create_access_token(identity=user.id)
+    # Generate JWT token (identity must be a string)
+    access_token = create_access_token(identity=str(user.id))
 
     return (
         jsonify(
@@ -100,8 +100,8 @@ def login():
     if not user:
         return jsonify({"error": "Invalid email or password"}), 401
 
-    # Generate JWT token
-    access_token = create_access_token(identity=user.id)
+    # Generate JWT token (identity must be a string)
+    access_token = create_access_token(identity=str(user.id))
 
     return jsonify(
         {
