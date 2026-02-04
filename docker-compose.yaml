@@ -18,5 +18,38 @@ services:
       - "1025:1025"     # SMTP port
       - "8025:8025"     # Web UI port
 
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "5000:5000"
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: password
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+    depends_on:
+      - rabbitmq
+      - mailhog
+
+  email-consumer:
+    build: ./backend
+    command: ["python", "email_consumer.py"]
+    deploy:
+      replicas: 3
+      mode: replicated
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: password
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+    depends_on:
+      - rabbitmq
+      - mailhog
+
 volumes:
   rabbitmq_data:

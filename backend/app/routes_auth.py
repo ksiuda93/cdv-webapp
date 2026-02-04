@@ -56,13 +56,16 @@ def register():
     if error:
         return jsonify({"error": error}), 400
 
-    publish_message("email-send", {
-        "event": "user_registered",
-        "email": user.email,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "registered_at": datetime.now(timezone.utc).isoformat(),
-    })
+    try:
+        publish_message("email-send", {
+            "event": "user_registered",
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "registered_at": datetime.now(timezone.utc).isoformat(),
+        })
+    except Exception as e:
+        logger.error(f"Failed to publish registration email message for user {user.email}: {e}")
 
     # Generate JWT token (identity must be a string)
     access_token = create_access_token(identity=str(user.id))
