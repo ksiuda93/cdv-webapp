@@ -22,6 +22,16 @@ class Config:
         hours=int(os.environ.get("JWT_ACCESS_TOKEN_EXPIRES_HOURS", 1))
     )
 
+    # RabbitMQ
+    RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "localhost")
+    RABBITMQ_PORT = int(os.environ.get("RABBITMQ_PORT", 5672))
+    RABBITMQ_USER = os.environ.get("RABBITMQ_USER", "user")
+    RABBITMQ_PASS = os.environ.get("RABBITMQ_PASS", "password")
+
+    # SMTP (Mailhog)
+    SMTP_HOST = os.environ.get("SMTP_HOST", "localhost")
+    SMTP_PORT = int(os.environ.get("SMTP_PORT", 1025))
+
 
 class DevelopmentConfig(Config):
     """Development configuration."""

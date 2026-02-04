@@ -1,11 +1,17 @@
 """Authentication routes."""
 
+import logging
+from datetime import datetime, timezone
+
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token
 from marshmallow import ValidationError
 
+from app.rabbitmq import publish_message
 from app.schemas import LoginSchema, RegisterSchema
 from app.services import UserService
+
+logger = logging.getLogger(__name__)
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
@@ -49,6 +55,14 @@ def register():
 
     if error:
         return jsonify({"error": error}), 400
+
+    publish_message("email-send", {
+        "event": "user_registered",
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "registered_at": datetime.now(timezone.utc).isoformat(),
+    })
 
     # Generate JWT token (identity must be a string)
     access_token = create_access_token(identity=str(user.id))
