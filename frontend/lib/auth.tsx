@@ -11,6 +11,7 @@ import {
 import {
   login as apiLogin,
   register as apiRegister,
+  logout as apiLogout,
   getProfile,
   type User,
   type LoginResponse,
@@ -28,7 +29,7 @@ interface AuthContextType {
     email: string
     password: string
   }) => Promise<RegisterResponse>
-  logout: () => void
+  logout: () => Promise<void> | void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -88,7 +89,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     []
   )
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await apiLogout()
     localStorage.removeItem('token')
     setToken(null)
     setUser(null)

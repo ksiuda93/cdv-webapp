@@ -28,6 +28,17 @@ class Config:
     RABBITMQ_USER = os.environ.get("RABBITMQ_USER", "user")
     RABBITMQ_PASS = os.environ.get("RABBITMQ_PASS", "password")
 
+    # Redis
+    REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
+    REDIS_PORT = int(os.environ.get("REDIS_PORT", 6379))
+    REDIS_DB = int(os.environ.get("REDIS_DB", 0))
+    REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", None)
+
+    # Rate Limiting
+    RATE_LIMIT_LOGIN = int(os.environ.get("RATE_LIMIT_LOGIN", 5))
+    RATE_LIMIT_REGISTER = int(os.environ.get("RATE_LIMIT_REGISTER", 3))
+    RATE_LIMIT_WINDOW = int(os.environ.get("RATE_LIMIT_WINDOW", 60))
+
     # SMTP (Mailhog)
     SMTP_HOST = os.environ.get("SMTP_HOST", "localhost")
     SMTP_PORT = int(os.environ.get("SMTP_PORT", 1025))

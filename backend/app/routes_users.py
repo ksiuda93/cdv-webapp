@@ -5,6 +5,7 @@ from marshmallow import ValidationError
 
 from app.auth import jwt_required_custom
 from app.models import User
+from app.redis_client import cache_delete, cache_get, cache_set
 from app.schemas import UpdateUserSchema
 from app.services import UserService
 
@@ -16,13 +17,20 @@ users_bp = Blueprint("users", __name__, url_prefix="/api/users")
 def get_current_user(current_user: User):
     """Get current user's profile.
 
-    Requires JWT authentication.
+    Requires JWT authentication. Results cached in Redis for 5 minutes.
 
     Returns:
         200: User profile data
         401: Unauthorized (invalid/expired token)
     """
-    return jsonify({"user": current_user.to_dict()}), 200
+    cache_key = f"user:{current_user.id}:profile"
+    cached = cache_get(cache_key)
+    if cached:
+        return jsonify(cached), 200
+
+    response = {"user": current_user.to_dict()}
+    cache_set(cache_key, response, ttl=300)
+    return jsonify(response), 200
 
 
 @users_bp.route("/me", methods=["PUT"])
@@ -69,6 +77,9 @@ def update_current_user(current_user: User):
     if error:
         return jsonify({"error": error}), 400
 
+    # Invalidate cached profile
+    cache_delete(f"user:{current_user.id}:*")
+
     return jsonify(
         {
             "message": "User updated successfully",
@@ -82,24 +93,29 @@ def update_current_user(current_user: User):
 def get_balance(current_user: User):
     """Get current user's account balance.
 
-    Requires JWT authentication.
+    Requires JWT authentication. Results cached in Redis for 2 minutes.
 
     Returns:
         200: Account balance data
         401: Unauthorized (invalid/expired token)
         404: User not found
     """
+    cache_key = f"user:{current_user.id}:balance"
+    cached = cache_get(cache_key)
+    if cached:
+        return jsonify(cached), 200
+
     balance, error = UserService.get_balance(current_user.id)
 
     if error:
         return jsonify({"error": error}), 404
 
-    return jsonify(
-        {
-            "account_balance": str(balance),
-            "currency": "PLN",
-        }
-    ), 200
+    response = {
+        "account_balance": str(balance),
+        "currency": "PLN",
+    }
+    cache_set(cache_key, response, ttl=120)
+    return jsonify(response), 200
 
 
 @users_bp.errorhandler(404)

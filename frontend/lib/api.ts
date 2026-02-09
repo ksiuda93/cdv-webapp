@@ -170,3 +170,13 @@ export async function updateProfile(data: {
 export async function getBalance(): Promise<BalanceResponse> {
   return fetchApi<BalanceResponse>('/api/users/me/balance')
 }
+
+export async function logout(): Promise<void> {
+  try {
+    await fetchApi<{ message: string }>('/api/auth/logout', {
+      method: 'POST',
+    })
+  } catch {
+    // Ignore errors — token might already be expired
+  }
+}

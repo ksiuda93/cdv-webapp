@@ -11,6 +11,20 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   mailhog:
     image: mailhog/mailhog
     container_name: mailhog
@@ -28,11 +42,17 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: user
       RABBITMQ_PASS: password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       SMTP_HOST: mailhog
       SMTP_PORT: 1025
     depends_on:
-      - rabbitmq
-      - mailhog
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      mailhog:
+        condition: service_started
 
   email-consumer:
     build: ./backend
@@ -53,3 +73,4 @@ services:
 
 volumes:
   rabbitmq_data:
+  redis_data:

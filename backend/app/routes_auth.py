@@ -3,11 +3,12 @@
 import logging
 from datetime import datetime, timezone
 
-from flask import Blueprint, jsonify, request
-from flask_jwt_extended import create_access_token
+from flask import Blueprint, current_app, jsonify, request
+from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from marshmallow import ValidationError
 
 from app.rabbitmq import publish_message
+from app.redis_client import blacklist_token, rate_limit
 from app.schemas import LoginSchema, RegisterSchema
 from app.services import UserService
 
@@ -17,6 +18,7 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
 @auth_bp.route("/register", methods=["POST"])
+@rate_limit(max_requests=3, window_seconds=60, key_prefix="rl:reg")
 def register():
     """Register a new user.
 
@@ -83,6 +85,7 @@ def register():
 
 
 @auth_bp.route("/login", methods=["POST"])
+@rate_limit(max_requests=5, window_seconds=60, key_prefix="rl:login")
 def login():
     """Authenticate user and return JWT token.
 
@@ -127,6 +130,31 @@ def login():
             "access_token": access_token,
         }
     ), 200
+
+
+@auth_bp.route("/logout", methods=["POST"])
+@jwt_required()
+def logout():
+    """Logout user by blacklisting their JWT token.
+
+    Requires JWT authentication.
+
+    Returns:
+        200: Logout successful
+        401: Unauthorized (invalid/expired token)
+    """
+    jwt_data = get_jwt()
+    jti = jwt_data["jti"]
+    exp_timestamp = jwt_data["exp"]
+
+    # Calculate remaining TTL so the blacklist entry auto-expires
+    import time
+    remaining = max(int(exp_timestamp - time.time()), 0)
+
+    blacklist_token(jti, remaining)
+    logger.info(f"Token {jti} blacklisted (expires in {remaining}s)")
+
+    return jsonify({"message": "Wylogowano pomyślnie"}), 200
 
 
 @auth_bp.errorhandler(404)
