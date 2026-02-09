@@ -125,20 +125,18 @@ export default function UsersPage() {
       <nav className={styles.navbar} aria-label="Nawigacja główna">
         <div className={`container ${styles.navContent}`}>
           <Link href="/" className={styles.navLogo}>
-            Bank CDV
+            <span className={styles.navLogoIcon}>CB</span>
+            CDV Banking
           </Link>
           <div className={styles.navLinks}>
             <Link href="/dashboard" className={styles.navLink}>
               Dashboard
             </Link>
             <Link href="/users" className={styles.navLink} aria-current="page">
-              Użytkownicy (demo)
+              Klienci
             </Link>
             <Link href="/login" className={styles.navLink}>
               Logowanie
-            </Link>
-            <Link href="/register" className={styles.navLink}>
-              Rejestracja
             </Link>
           </div>
         </div>
@@ -148,7 +146,7 @@ export default function UsersPage() {
         <header className={styles.pageHeader}>
           <div>
             <h1 className={styles.pageTitle}>Zarządzanie klientami</h1>
-            <p className={styles.pageSubtitle}>Lista wszystkich klientów banku</p>
+            <p className={styles.pageSubtitle}>Przeglądaj i zarządzaj kontami klientów</p>
           </div>
           <button
             ref={triggerButtonRef}

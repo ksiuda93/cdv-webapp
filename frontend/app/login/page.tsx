@@ -62,12 +62,13 @@ export default function LoginPage(): React.JSX.Element {
       <div className={styles.loginContainer}>
         <div className={styles.loginCard}>
           <header className={styles.loginHeader}>
-            <h1 className={styles.logo}>Bank CDV</h1>
+            <div className={styles.logoIcon}>CB</div>
+            <h1 className={styles.logo}>CDV Banking</h1>
             <p className={styles.subtitle}>System zarządzania klientami</p>
           </header>
 
           <form onSubmit={handleSubmit} className={styles.loginForm} noValidate>
-            <h2 className={styles.formTitle}>Logowanie</h2>
+            <h2 className={styles.formTitle}>Zaloguj się do systemu</h2>
 
             {error && (
               <div id="login-error" className={styles.errorMessage} role="alert">
@@ -120,20 +121,24 @@ export default function LoginPage(): React.JSX.Element {
               className={`btn btn-primary ${styles.submitBtn}`}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Logowanie...' : 'Zaloguj się'}
+              {isSubmitting ? 'Autoryzacja...' : 'Zaloguj się'}
             </button>
           </form>
 
           <footer className={styles.loginFooter}>
             <p className="mb-1">
               Nie masz konta?{' '}
-              <Link href="/register">Zarejestruj się</Link>
+              <Link href="/register">Utwórz konto</Link>
             </p>
             <Link href="/users" className={styles.demoLink}>
-              Demo: Przejdź do panelu użytkowników
+              Demo: Panel użytkowników
             </Link>
           </footer>
         </div>
+
+        <p className={styles.securityNote}>
+          &#128274; Połączenie szyfrowane SSL/TLS
+        </p>
       </div>
     </main>
   )

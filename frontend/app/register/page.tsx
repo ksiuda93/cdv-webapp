@@ -78,12 +78,13 @@ export default function RegisterPage(): React.JSX.Element {
       <div className={styles.registerContainer}>
         <div className={styles.registerCard}>
           <header className={styles.registerHeader}>
-            <h1 className={styles.logo}>Bank CDV</h1>
+            <div className={styles.logoIcon}>CB</div>
+            <h1 className={styles.logo}>CDV Banking</h1>
             <p className={styles.subtitle}>System zarządzania klientami</p>
           </header>
 
           <form onSubmit={handleSubmit} className={styles.registerForm} noValidate>
-            <h2 className={styles.formTitle}>Rejestracja</h2>
+            <h2 className={styles.formTitle}>Utwórz nowe konto</h2>
 
             {error && (
               <div id="register-error" className={styles.errorMessage} role="alert">
@@ -189,6 +190,10 @@ export default function RegisterPage(): React.JSX.Element {
             </p>
           </footer>
         </div>
+
+        <p className={styles.securityNote}>
+          &#128274; Połączenie szyfrowane SSL/TLS
+        </p>
       </div>
     </main>
   )
