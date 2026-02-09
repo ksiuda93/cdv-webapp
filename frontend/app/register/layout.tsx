@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Rejestracja - Bank CDV',
-  description: 'Utwórz nowe konto w systemie zarządzania Bank CDV',
+  title: 'Rejestracja — CDV Banking',
+  description: 'Utwórz nowe konto w systemie CDV Banking',
   robots: 'noindex, nofollow',
 }
 

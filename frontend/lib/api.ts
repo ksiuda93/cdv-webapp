@@ -1,5 +1,7 @@
 // API Client for Flask backend
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://95.217.122.131:20197'
+
 export interface User {
   id: number
   firstName: string
@@ -108,7 +110,9 @@ async function fetchApi<T>(
     }
   }
 
-  const response = await fetch(endpoint, {
+  const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`
+
+  const response = await fetch(url, {
     ...options,
     headers,
     body,

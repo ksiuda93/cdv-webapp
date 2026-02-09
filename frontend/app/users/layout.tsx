@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Zarządzanie klientami - Bank CDV',
-  description: 'Panel zarządzania klientami banku CDV',
+  title: 'Klienci — CDV Banking',
+  description: 'Panel zarządzania klientami CDV Banking',
   robots: 'noindex, nofollow',
 }
 

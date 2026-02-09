@@ -2,8 +2,8 @@ import './globals.css'
 import { AuthProvider } from '@/lib/auth'
 
 export const metadata = {
-  title: 'Bank CDV - System zarządzania',
-  description: 'System zarządzania klientami banku CDV',
+  title: 'CDV Banking — System Zarządzania',
+  description: 'Profesjonalny system zarządzania klientami banku CDV',
 }
 
 export default function RootLayout({
@@ -13,6 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body>
         <AuthProvider>{children}</AuthProvider>
       </body>

@@ -140,14 +140,15 @@ export default function DashboardPage(): React.JSX.Element {
       <nav className={styles.navbar} aria-label="Nawigacja główna">
         <div className={`container ${styles.navContent}`}>
           <Link href="/" className={styles.navLogo}>
-            Bank CDV
+            <span className={styles.navLogoIcon}>CB</span>
+            CDV Banking
           </Link>
           <div className={styles.navLinks}>
             <Link href="/dashboard" className={styles.navLink} aria-current="page">
               Dashboard
             </Link>
             <Link href="/users" className={styles.navLink}>
-              Użytkownicy (demo)
+              Klienci
             </Link>
             <button
               type="button"
@@ -184,11 +185,14 @@ export default function DashboardPage(): React.JSX.Element {
           <div className={styles.grid}>
             {/* Balance Card */}
             <section className={`card ${styles.balanceCard}`} aria-labelledby="balance-title">
-              <h2 id="balance-title" className={styles.cardTitle}>Stan konta</h2>
+              <h2 id="balance-title" className={styles.cardTitle}>Dostępne środki</h2>
               {balance ? (
-                <p className={styles.balanceAmount}>
-                  {formatCurrency(balance.accountBalance, balance.currency)}
-                </p>
+                <>
+                  <p className={styles.balanceAmount}>
+                    {formatCurrency(balance.accountBalance, balance.currency)}
+                  </p>
+                  <p className={styles.balanceLabel}>Saldo konta głównego</p>
+                </>
               ) : (
                 <p className={styles.noData}>Brak danych o saldzie</p>
               )}
