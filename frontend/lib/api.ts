@@ -1,6 +1,6 @@
 // API Client for Flask backend
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://95.217.122.131:20197'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cdv-webapp-backend-production.up.railway.app'
 
 export interface User {
   id: number
