@@ -17,20 +17,31 @@ _redis_client: Optional[redis.Redis] = None
 def init_redis(app: Flask) -> None:
     """Initialize Redis connection from Flask app config.
 
+    Supports REDIS_URL (e.g. redis://user:pass@host:port) or individual params.
+
     Args:
         app: Flask application instance
     """
     global _redis_client
     try:
-        _redis_client = redis.Redis(
-            host=app.config.get("REDIS_HOST", "localhost"),
-            port=app.config.get("REDIS_PORT", 6379),
-            db=app.config.get("REDIS_DB", 0),
-            password=app.config.get("REDIS_PASSWORD", None),
-            decode_responses=True,
-            socket_connect_timeout=5,
-            retry_on_timeout=True,
-        )
+        redis_url = app.config.get("REDIS_URL")
+        if redis_url:
+            _redis_client = redis.from_url(
+                redis_url,
+                decode_responses=True,
+                socket_connect_timeout=5,
+                retry_on_timeout=True,
+            )
+        else:
+            _redis_client = redis.Redis(
+                host=app.config.get("REDIS_HOST", "localhost"),
+                port=app.config.get("REDIS_PORT", 6379),
+                db=app.config.get("REDIS_DB", 0),
+                password=app.config.get("REDIS_PASSWORD", None),
+                decode_responses=True,
+                socket_connect_timeout=5,
+                retry_on_timeout=True,
+            )
         _redis_client.ping()
         logger.info("Redis connection established successfully")
     except redis.ConnectionError as e:
